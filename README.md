@@ -80,3 +80,21 @@ ls -al /usr/lib/aarch64-linux-gnu/libstdc++.so.6
 export NVDS_ENABLE_LATENCY_MEASUREMENT=1
 export NVDS_ENABLE_COMPONENT_LATENCY_MEASUREMENT=1
 
+
+ 编译自己的gstreamer：
+ 
+ 1编译如下两个模块：
+ 
+https://gitlab.freedesktop.org/gstreamer/gstreamer/-/tree/1.14.5
+https://gitlab.freedesktop.org/gstreamer/gstreamer/-/tree/gst-plugins-base-1.14.5
+
+ --prefix ~/gstlibs
+ 
+2 export PKG_CONFIG_PATH=~/gstlibs/lib/aarch64-linux-gnu/pkgconfig/:$PKG_CONFIG_PATH
+
+3确认是否切到自己的编译路径下：pkg-config --libs gstreamer-1.0
+
+4到自己的工程下直接make
+
+
+
