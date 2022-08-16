@@ -79,6 +79,7 @@ ls -al /usr/lib/aarch64-linux-gnu/libstdc++.so.6
 
 export NVDS_ENABLE_LATENCY_MEASUREMENT=1
 export NVDS_ENABLE_COMPONENT_LATENCY_MEASUREMENT=1
+
 export GST_PLUGIN_PATH=/home/nvidia/gstlibs/lib/aarch64-linux-gnu/:$GST_PLUGIN_PATH
 
 
