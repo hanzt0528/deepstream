@@ -101,3 +101,49 @@ https://gitlab.freedesktop.org/gstreamer/gstreamer/-/tree/gst-plugins-base-1.14.
 
 
 
+
+gst-launch-1.0 filesrc location = sample_1080p_h264.mp4 ! decodebin ! m.sink_0 \
+filesrc location = sample_1080p_h264.mp4 ! decodebin ! m.sink_1 \
+filesrc location = sample_1080p_h264.mp4 ! decodebin ! m.sink_2 \
+filesrc location = sample_1080p_h264.mp4 ! decodebin ! m.sink_3 \
+nvstreammux name=m width=1920 height=1080 batch-size=4 batched-push-timeout=40000 ! \
+queue ! nvinfer config-file-path=<config> batch-size=4 ! \
+queue ! nvtracker ll-lib-file=<lib-file> ! \
+vstreamdemux name=d \
+d.src_1 ! queue ! nvvideoconvert ! nvdsosd ! nvvideoconvert ! nvv4l2h264enc ! h264parse ! qtmux ! filesink location=out.mp4 \
+d.src_2 ! queue ! nvvideoconvert ! nvdsosd ! nveglglessink
+
+
+gst-launch-1.0 filesrc location = sample_1080p_h264.mp4 ! decodebin ! m.sink_0 \
+    filesrc location = sample_1080p_h264.mp4 ! decodebin ! m.sink_1 \
+    filesrc location = sample_1080p_h264.mp4 ! decodebin ! m.sink_2 \
+    filesrc location = sample_1080p_h264.mp4 ! decodebin ! m.sink_3 \
+    nvstreammux name=m width=1920 height=1080 batch-size=4 batched-push-timeout=40000 ! \
+    queue ! nvinfer config-file-path=<config> batch-size=4 ! \
+    queue ! nvtracker ll-lib-file=<lib-file> ! \
+    nvstreamdemux name=d \
+    d.src_0 ! queue ! nvvideoconvert ! nvdsosd ! nveglglessink \
+    d.src_1 ! queue ! nvvideoconvert ! nvdsosd ! nveglglessink \
+    d.src_2 ! queue ! nvvideoconvert ! nvdsosd ! nveglglessink \
+    d.src_3 ! queue ! nvvideoconvert ! nvdsosd ! nveglglessink
+
+.. note::
+   Queue element should be inserted after every ``nvstreamdemux src`` pad.
+   
+   
+   JPEG decode
+
+Using nvv4l2decoder on Jetson:
+
+$ gst-launch-1.0 filesrc location= ./streams/sample_720p.jpg ! jpegparse ! nvv4l2decoder ! nvegltransform ! nveglglessink
+Using nvv4l2decoder on dGPU:
+
+$ gst-launch-1.0 filesrc location= ./streams/sample_720p.jpg ! jpegparse ! nvv4l2decoder ! nveglglessink
+Using nvjpegdec on Jetson:
+
+$ gst-launch-1.0 filesrc location= ./streams/sample_720p.jpg ! nvjpegdec ! nvegltransform !  nveglglessink
+Using nvjpegdec on dGPU:
+
+$ gst-launch-1.0 filesrc location= ./streams/sample_720p.jpg ! nvjpegdec !   nveglglessink
+
+参考：https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_FAQ.html?highlight=gst%20launch
